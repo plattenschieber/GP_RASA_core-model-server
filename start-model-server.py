@@ -2,31 +2,10 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 import time
 import logging
 
-logging.basicConfig()
-logger = logging.getLogger()
-
 class RequestHandler(SimpleHTTPRequestHandler):
-    def respond(self, opts):
-        response = self.handle_http(opts['status'], self.path)
-        self.wfile.write(response)
-
-    def handle_http(self, status_code, path):
-        content = ''
-        version = "1.0.0"
-        if self.headers["If-None-Match"] == version or self.headers["If-None-Match"] == "\""+version+"\"":
-            logger.info("No Changes detected")
-            self.send_response(204)
-        else:
-            logger.info("respond with new model and version: " + version)
-            self.send_response(status_code)
-            self.send_header('ETag', version)
-            self.send_header('Content-type', 'application/zip')
-
-            f = open("model.zip", "rb")
-            content = f.read()
-        self.end_headers()
-
-        return bytes(content)
+    def __init__(self, request, client_address, server):
+        self.version = 1
+        super(RequestHandler, self).__init__(request, client_address, server)
 
     def do_HEAD(self):
         self.send_response(200)
@@ -35,25 +14,59 @@ class RequestHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         paths = {
-            '/models': {'status': 200}
+            '/models/core': {'status': 200}
         }
-        logger.info("got request for " + self.path)
         if self.path in paths:
-            self.respond(paths[self.path])
+            self.respond_get(paths[self.path])
         else:
-            self.respond({'status': 500})
+            self.respond_get({'status': 500})
 
+    def respond_get(self, opts):
+        content = b''
+        if self.headers["If-None-Match"] == str(self.version) or self.headers["If-None-Match"] == "\"" + str(self.version) + "\"":
+            self.send_response(204)
+        else:
+            self.send_response(opts['status'])
+            self.send_header('ETag', str(self.version))
+            self.send_header('Content-type', 'application/zip')
+            f = open("model.zip", "rb")
+            content = f.read()
+
+        self.end_headers()
+
+        self.wfile.write(content)
+
+    def do_POST(self):
+        paths = {
+            '/models/core': {'status': 201}
+        }
+
+        if self.path in paths:
+            self.respond_post(paths[self.path])
+        else:
+            self.respond_post({'status': 500})
+
+    def respond_post(self, opts):
+        self.send_response(opts['status'])
+        content_length = int(self.headers['Content-Length'])
+        output_file = open("model.zip", "wb")
+        output_file.write(self.rfile.read(content_length))
+        output_file.close()
+        self.end_headers()
+        self.version = self.version + 1
+        self.log_message("Next Version: " + self.version)
+        self.wfile.write(b'')
 
 
 def run_server(hostname="0.0.0.0", port=8000):
     server_class = HTTPServer
     httpd = server_class((hostname, port), RequestHandler)
-    logger.info(time.asctime(), 'Server Starts - %s:%s' % (hostname, port))
+    logging.info(time.asctime(), 'Server Starts - %s:%s' % (hostname, port))
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
-    logger.info(time.asctime(), 'Server Stops - %s:%s' % (hostname, port))
+    logging.info(time.asctime(), 'Server Stops - %s:%s' % (hostname, port))
 
 run_server()
