@@ -1,0 +1,315 @@
+intents:
+ - greet
+ - set_form_of_address
+ - set_first_name
+ - set_surname
+ - set_street_address
+ - set_zip_code
+ - set_city
+ - set_phone_number
+ - set_e_mail
+ - is_business_affair
+ - branch_selected
+ - is_car_damaged
+ - is_counterpart_insured_at_zurich
+ - is_damage_caused_by_own_car
+ - set_first_name_other_insured_party
+ - set_surname_other_insured_party
+ - set_insurance_number
+ - set_first_name_of_victim
+ - set_surname_of_victim
+ - set_phone_number_of_victim
+ - set_insurance_number_of_victim
+ - is_insured_party_driver
+ - set_license_plate
+ - set_date_of_damage
+ - set_cause_of_damage
+ - set_damage_location
+ - set_description_of_accident
+ - set_current_location_of_car
+ - set_first_name_insured_party
+ - set_surname_insured_party
+ - set_is_callback_wanted
+ - set_form_of_address_of_driver
+ - set_first_name_of_driver
+ - set_surname_of_driver
+ - set_birth_date_of_driver
+ - set_natural_phenomenon
+ - set_visible_damage_after
+ - set_visible_damage_before
+ - set_date_and_time_reachability
+ - set_callback_phone_number
+ - confirm
+ - deny
+
+actions:
+ - utter_default
+ - utter_greet
+ - utter_ask_form_of_address
+ - utter_ask_first_name
+ - utter_ask_surname
+ - utter_ask_street_address
+ - utter_ask_zip_code
+ - utter_ask_city
+ - utter_ask_phone_number
+ - utter_ask_e_mail
+ - utter_ask_business_affair
+ - utter_ask_branch_selected
+ - utter_ask_own_car_damaged
+ - utter_ask_counterpart_insured_at_zurich
+ - utter_ask_damage_caused_by_own_car
+ - utter_ask_first_name_other_insured_party
+ - utter_ask_surname_other_insured_party
+ - utter_ask_insurance_number
+ - utter_ask_first_name_of_victim
+ - utter_ask_last_name_of_victim
+ - utter_ask_phone_number_of_victim
+ - utter_ask_insurance_number_of_victim
+ - utter_ask_insured_party_driver
+ - utter_ask_license_plate
+ - utter_ask_date_of_damage
+ - utter_ask_cause_of_damage
+ - utter_ask_damage_location
+ - utter_ask_description_of_accident
+ - utter_ask_current_location_of_car
+ - utter_ask_first_name_insured_party
+ - utter_ask_surname_insured_party
+ - utter_ask_is_callback_wanted
+ - utter_ask_form_of_address_of_driver
+ - utter_ask_first_name_of_driver
+ - utter_ask_surname_of_driver
+ - utter_ask_birth_date_of_driver
+ - utter_ask_rechability
+ - utter_ask_natural_phenomenon
+ - utter_ask_visible_damage_after
+ - utter_ask_visible_damage_before
+ - utter_ask_callback_phone_number
+ - utter_goodbye
+ - utter_abbruch
+ - action_send_email
+ - action_set_business_affair
+ - action_set_callback
+ - action_is_car_damaged
+ - action_ask_kontakt
+ - utter_business_affair_confirm
+
+entities:
+ - form_of_address
+ - first_name
+ - surname
+ - address_street
+ - address_street_number
+ - address_zip_code
+ - address_city
+ - phone_number
+ - e_mail
+ - business_affair
+ - branch
+ - car_is_damaged
+ - counterpart_is_insured
+ - damage_from_own_car
+ - first_name_insured_party
+ - surname_insured_party
+ - insurance_number
+ - first_name_injured_party
+ - surname_injured_party
+ - phone_number_injured_party
+ - insurance_number_injured_party
+ - insured_party_is_driver
+ - license_plate
+ - date_of_damage
+ - cause_of_damage
+ - damage_location
+ - description_of_accident
+ - current_location_of_car
+ - is_callback_wanted
+ - callback_phone_number
+ - reachability_date
+ - reachability_time
+ - form_of_address_of_driver
+ - first_name_of_driver
+ - surname_of_driver
+ - birth_date_of_driver
+ - natural_phenomenon
+ - visible_damage_after
+ - visible_damage_before
+
+
+slots:
+  requested_slot:
+    type: unfeaturized
+
+  form_of_address:
+    type: text
+  first_name:
+    type: text
+  surname:
+    type: text
+  address_street:
+    type: text
+  address_street_number:
+    type: text
+  address_zip_code:
+    type: text
+  address_city:
+    type: text
+  phone_number:
+    type: text
+  e_mail:
+    type: text
+  business_affair:
+    type: bool
+  branch:
+    type: categorical
+    values:
+    - kfz
+    - haftpflicht 
+    - unfall 
+    - hausrat 
+    - rechtschutz
+  car_is_damaged:
+    type: bool
+  counterpart_is_insured:
+    type: bool
+  damage_from_own_car:
+    type: bool
+  first_name_insured_party:
+    type: text
+  surname_insured_party:
+    type: text
+  insurance_number:
+    type: text
+  first_name_injured_party:
+    type: text
+  surname_injured_party:
+    type: text
+  phone_number_injured_party:
+    type: text
+  insurance_number_injured_party:
+    type: text
+  insured_party_is_driver:
+    type: bool
+  license_plate:
+    type: text
+  date_of_damage:
+    type: text
+  cause_of_damage:
+    type: text
+  damage_location:
+    type: text
+  description_of_accident:
+    type: text
+  current_location_of_car:
+    type: text
+  is_callback_wanted:
+    type: bool
+  callback_phone_number:
+    type: text
+  form_of_address_of_driver:
+    type: text
+  first_name_of_driver:
+    type: text
+  surname_of_driver:
+    type: text
+  birth_date_of_driver:
+    type: text
+  reachability_date:
+    type: text
+  reachability_time:
+    type: text
+  natural_phenomenon:
+    type: bool
+  visible_damage_after:
+    type: text
+  visible_damage_before:
+    type: text
+
+templates:
+ utter_default:
+   - text: "Leider habe ich Sie nicht verstanden."
+ utter_greet:
+   - text: "Hi, ich bin Zoe"
+ utter_ask_form_of_address:
+   - text: "Wie darf ich Sie ansprechen?"
+ utter_ask_first_name:
+   - text: "Wie lautet Ihr Vorname?"
+ utter_ask_surname:
+   - text: "Dankeschön. Wie lautet Ihr Nachname?"
+ utter_ask_street_address:
+   - text: "Wie lautet Ihre Straße und Hausnummer?"
+ utter_ask_zip_code:
+   - text: "Nennen Sie mir bitte Ihre Postleitzahl."
+ utter_ask_city:
+   - text: "In welchem Ort wohnen Sie?"
+ utter_ask_phone_number:
+   - text: "Unter welcher Telefonnummer können wir Sie am besten erreichen?"
+ utter_ask_e_mail:
+   - text: "Wie lautet Ihre E-Mail Adresse?"
+ utter_ask_business_affair:
+   - text: "Handelt es sich bei diesem Fall um eine gewerbliche Angelegenheit?"
+ utter_ask_branch_selected:
+   - text: "In welcher Sparte möchten Sie einen Versicherungsfall melden?"
+ utter_ask_own_car_damaged:
+   - text: "Wurde Ihr eigenes Auto beschädigt?"
+ utter_ask_counterpart_insured_at_zurich:
+   - text: "Ist Ihr Unfallgegner bei der Zurich versichert?"
+ utter_ask_damage_caused_by_own_car:
+   - text: "Wurde der Schaden von Ihrem Auto verursacht?"
+ utter_ask_first_name_other_insured_party:
+   - text: "Wie lautet der Vorname des Versicherungsnehmers?"
+ utter_ask_surname_other_insured_party:
+   - text: "Wie lautet der Nachname des Versicherungsnehmers?"
+ utter_ask_insurance_number:
+   - text: "Falls vorhanden, wie lautet die Versicherungsnummer des Versicherungsnehmers?"
+ utter_ask_first_name_of_victim:
+   - text: "Wie lautet der Vorname des Geschädigten?"
+ utter_ask_last_name_of_victim:
+   - text: "Wie lautet der Nachname des Geschädigten?"
+ utter_ask_phone_number_of_victim:
+   - text: "Falls vorhanden geben Sie mir bitte die Telefonnummer des Geschädigten."
+ utter_ask_insurance_number_of_victim:
+   - text: "Falls vorhanden bitte auch noch die Versicherungsnummer des Geschädigten."
+ utter_ask_insured_party_driver:
+   - text: "Saßen Sie selbst am Steuer?"
+ utter_ask_license_plate:
+   - text: "Wie lautet das Kennzeichen des geschädigten Autos? (z. B. ZO-E 1234)"
+ utter_ask_date_of_damage:
+   - text: "Wann hat der Schaden stattgefunden?"
+ utter_ask_cause_of_damage:
+   - text: "Was war die Schadensursache? (z. B. Auffahrunfall oder Parkunfall)"
+ utter_ask_damage_location:
+   - text: "Wo hat sich der Schaden ereignet? (z. B. Autobahn, innerorts)"
+ utter_ask_description_of_accident:
+   - text: "Bitte schildern Sie uns kurz den Unfallhergang."
+ utter_ask_current_location_of_car:
+   - text: "Wo kann das Fahrzeug besichtigt werden?"
+ utter_ask_first_name_insured_party:
+   - text: "Wie lautet der Vorname des Versicherungsnehmers?"
+ utter_ask_surname_insured_party:
+   - text: "Wie lautet der Nachname des Versicherungsnehmer?"
+ utter_ask_is_callback_wanted:
+   - text: "Möchten Sie für Rückfragen eine Rückrufnummer bei uns hinterlegen?"
+ utter_ask_form_of_address_of_driver:
+   - text: "Bitte nennen Sie mir die Anrede des Fahrers." 
+ utter_ask_first_name_of_driver:
+   - text: "Wie lautet der Vorname des Fahrers?"
+ utter_ask_surname_of_driver:
+   - text: "Wie lautet der Nachname des Fahrers?"
+ utter_ask_birth_date_of_driver:
+   - text: "Was ist das Geburtsdatum des Fahrers?"
+ utter_ask_rechability:
+   - text: "Ab wann sind Sie erreichbar? Wählen Sie bitte ein Datum und eine Uhrzeit aus. In den darauf folgenden zwei Stunden werden wir Sie anrufen."
+ utter_ask_natural_phenomenon:
+   - text: "Hat ein Naturereignis Ihr Auto beschädigt?"
+ utter_ask_visible_damage_after:
+   - text: "Bitte Schildern Sie uns die Sichtbaren Schäden am Fahrzeug."
+ utter_ask_visible_damage_before:
+   - text: "Gab es schon vorher sichtbare Schäden? Wenn ja welche?"
+ utter_ask_callback_phone_number:
+   - text: "Unter welcher Telefonnummer können wir sie für den Ruckruf erreichen?"
+ utter_goodbye:
+   - text: "Vielen Dank für Ihre Mitarbeit. Es wird eine E-Mail mit allen erfassten Informationen an einen Zuständigen Mitarbeiter gesendet. Ich wünsche Ihnen noch einen schönen Tag."
+ utter_abbruch:
+   - text: "Es tut mir leid, aber in diesem Fall kann ich Ihnen nicht weiter helfen. Sollten sie weiterhin Hilfe brauchen rufen Sie bitte die Service Hotline an: Tel.: ServiceHotlineEinfügen"
+ utter_business_affair_confirm:
+   - text: "Business_affair: {business_affair}"

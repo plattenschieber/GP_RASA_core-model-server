@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  chatbot-model-server:
+    image: chatbot-model-server
+    networks:
+      - chatbot
+    ports:
+      - "8000:8000"
+networks:
+  chatbot:
+    external: true
