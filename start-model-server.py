@@ -1,5 +1,9 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import time
+import logging
+
+logging.basicConfig()
+logger = logging.getLogger()
 
 class RequestHandler(SimpleHTTPRequestHandler):
     def respond(self, opts):
@@ -8,16 +12,17 @@ class RequestHandler(SimpleHTTPRequestHandler):
 
     def handle_http(self, status_code, path):
         content = ''
-
-        if self.headers["If-None-Match"] == "1234567" or self.headers["If-None-Match"] == "\"1234567\"":
-            print("No Change")
+        version = "1.0.0"
+        if self.headers["If-None-Match"] == version or self.headers["If-None-Match"] == "\""+version+"\"":
+            logger.info("No Changes detected")
             self.send_response(204)
         else:
-            print("respond with new model")
+            logger.info("respond with new model and version: " + version)
             self.send_response(status_code)
-            self.send_header('ETag', '1234567')
+            self.send_header('ETag', version)
             self.send_header('Content-type', 'application/zip')
-            f = open("models_123456.zip", "rb")
+
+            f = open("model.zip", "rb")
             content = f.read()
         self.end_headers()
 
@@ -32,7 +37,7 @@ class RequestHandler(SimpleHTTPRequestHandler):
         paths = {
             '/models': {'status': 200}
         }
-        print("request for " + self.path)
+        logger.info("got request for " + self.path)
         if self.path in paths:
             self.respond(paths[self.path])
         else:
@@ -43,12 +48,12 @@ class RequestHandler(SimpleHTTPRequestHandler):
 def run_server(hostname="0.0.0.0", port=8000):
     server_class = HTTPServer
     httpd = server_class((hostname, port), RequestHandler)
-    print(time.asctime(), 'Server Starts - %s:%s' % (hostname, port))
+    logger.info(time.asctime(), 'Server Starts - %s:%s' % (hostname, port))
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
-    print(time.asctime(), 'Server Stops - %s:%s' % (hostname, port))
+    logger.info(time.asctime(), 'Server Stops - %s:%s' % (hostname, port))
 
 run_server()

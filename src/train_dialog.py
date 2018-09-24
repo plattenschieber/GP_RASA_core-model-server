@@ -11,7 +11,7 @@ fallback = FallbackPolicy(fallback_action_name="action_default_fallback",
 
 
 def train_dialog(dialog_training_data_file, domain_file, path_to_model='./models/dialogue'):
-    logging.basicConfig(level='DEBUG')
+    logging.basicConfig(level='INFO')
     agent = Agent(domain_file,
                   policies=[MemoizationPolicy(max_history=2), KerasPolicy(), fallback])
     training_data = agent.load_data(dialog_training_data_file)
