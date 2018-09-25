@@ -110,7 +110,7 @@ public class PlanSpec {
   }
 
   public Deployment deployment() {
-    final Deployment deployment = new Deployment(new PlanIdentifier("CHAT", "CORE")
+    final Deployment deployment = new Deployment(new PlanIdentifier("CHAT", "CMS")
         .oid(new BambooOid("kxw2ardmf1mu")),
         "core-model-server-deployment")
         .releaseNaming(new ReleaseNaming("release-1")
@@ -125,7 +125,7 @@ public class PlanSpec {
                 new ScriptTask()
                     .description("Deploy Docker stack via docker-machine")
                     .inlineBody(
-                        "eval $(docker-machine env gpchatbotprod)\ndocker stack deploy --with-registry-auth \\\n  -c ./artifacts/docker-compose.yaml \\\n  core"))
+                        "eval $(docker-machine env gpchatbotprod)\ndocker stack deploy --with-registry-auth \\\n  -c ./artifacts/docker-compose.yaml \\\n  core-model-server"))
             .triggers(new AfterSuccessfulBuildPlanTrigger()));
     return deployment;
   }
