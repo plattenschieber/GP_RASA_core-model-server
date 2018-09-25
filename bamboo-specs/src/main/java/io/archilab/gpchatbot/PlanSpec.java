@@ -110,8 +110,7 @@ public class PlanSpec {
   }
 
   public Deployment deployment() {
-    final Deployment deployment = new Deployment(new PlanIdentifier("CHAT", "CMS")
-        .oid(new BambooOid("kxw2ardmf1mu")),
+    final Deployment deployment = new Deployment(new PlanIdentifier("CHAT", "CMS")),
         "core-model-server-deployment")
         .releaseNaming(new ReleaseNaming("release-1")
             .autoIncrement(true))
