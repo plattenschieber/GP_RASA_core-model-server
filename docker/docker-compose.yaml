@@ -2,7 +2,7 @@ version: '3'
 
 services:
   chatbot-model-server:
-    image: chatbot-model-server
+    image: docker.nexus.gpchatbot.archi-lab.io/chatbot/core-model-server:latest
     networks:
       - chatbot
 networks:
