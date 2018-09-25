@@ -11,9 +11,21 @@ docker-compose -p gpb -f ./docker/docker-compose.yaml up
 ```
 
 ## Testanfragen
+Zum erhalten des letzten Modells kann folgendes angefragt werden
 ```bash
-GET http://localhost:8000/models
+GET http://localhost:8000/models/core
 ```
 Wenn der Header "If-None-Match" mit der richtigen Version gesetzt ist kommt 204 No Content zurück, in allen anderen fällen 200 mit ddem content-type: application/zip
 
+Um ein neues Modell bereitzustellen kann ein Post versendet werden, der optional eine Version enthält
+```bash
+POST http://localhost:8000/models/core
+
+HEADER (optional):
+    Content-Type: application/zip
+    version: X.X.X
+
+CONTENT:
+    .zip file
+```
 

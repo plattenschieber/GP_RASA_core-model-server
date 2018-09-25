@@ -5,8 +5,6 @@ services:
     image: chatbot-model-server
     networks:
       - chatbot
-    ports:
-      - "8000:8000"
 networks:
   chatbot:
     external: true
