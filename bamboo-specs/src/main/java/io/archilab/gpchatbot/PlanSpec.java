@@ -82,7 +82,7 @@ public class PlanSpec {
                             "echo \"# Nexus Credentials\\nnexus_host = \\\"https://nexus.gpchatbot.archi-lab.io\\\"\\nnexus_username = \\\"bamboo\\\"\\nnexus_password = \\\"gpchatbot\\\"\\nnexus_repository = \\\"docker-hosted\\\"\" > .credentials\nnexus-cli image delete -name chatbot/core-model-server -keep 21"))
                 .requirements(new Requirement(
                     "system.builder.command.nexus-cli"))))
-        .linkedRepositories("core-model-server (master)")
+        .linkedRepositories("chatbot-core-model-server (master)")
         .triggers(new BitbucketServerTrigger())
         .planBranchManagement(new PlanBranchManagement()
             .delete(new BranchCleanup())
