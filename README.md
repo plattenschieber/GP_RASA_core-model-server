@@ -4,7 +4,7 @@ HTTP-Server der das Modell für den Rasa-Core bereitstellt. Das Modell wird trai
 ## Docker
 Für die Verwendung in Docker sind folgende Befehle anzuwenden:
 ```bash
-docker build -t chatbot-model-server .
+docker build -t docker.nexus.gpchatbot.archi-lab.io/chatbot/core-model-server .
 ```
 ```bash
 docker-compose -p gpb -f ./docker/docker-compose.yaml up
