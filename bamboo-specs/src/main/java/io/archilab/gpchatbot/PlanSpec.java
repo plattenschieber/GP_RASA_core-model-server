@@ -3,6 +3,11 @@ package io.archilab.gpchatbot;
 import com.atlassian.bamboo.specs.api.BambooSpec;
 import com.atlassian.bamboo.specs.api.builders.BambooKey;
 import com.atlassian.bamboo.specs.api.builders.BambooOid;
+import com.atlassian.bamboo.specs.api.builders.deployment.Deployment;
+import com.atlassian.bamboo.specs.api.builders.deployment.Environment;
+import com.atlassian.bamboo.specs.api.builders.deployment.ReleaseNaming;
+import com.atlassian.bamboo.specs.api.builders.permission.DeploymentPermissions;
+import com.atlassian.bamboo.specs.api.builders.permission.EnvironmentPermissions;
 import com.atlassian.bamboo.specs.api.builders.permission.PermissionType;
 import com.atlassian.bamboo.specs.api.builders.permission.Permissions;
 import com.atlassian.bamboo.specs.api.builders.permission.PlanPermissions;
@@ -16,12 +21,16 @@ import com.atlassian.bamboo.specs.api.builders.plan.branches.PlanBranchManagemen
 import com.atlassian.bamboo.specs.api.builders.plan.configuration.ConcurrentBuilds;
 import com.atlassian.bamboo.specs.api.builders.project.Project;
 import com.atlassian.bamboo.specs.api.builders.requirement.Requirement;
+import com.atlassian.bamboo.specs.builders.task.ArtifactDownloaderTask;
 import com.atlassian.bamboo.specs.builders.task.CheckoutItem;
+import com.atlassian.bamboo.specs.builders.task.CleanWorkingDirectoryTask;
 import com.atlassian.bamboo.specs.builders.task.DockerBuildImageTask;
 import com.atlassian.bamboo.specs.builders.task.DockerPushImageTask;
+import com.atlassian.bamboo.specs.builders.task.DownloadItem;
 import com.atlassian.bamboo.specs.builders.task.InjectVariablesTask;
 import com.atlassian.bamboo.specs.builders.task.ScriptTask;
 import com.atlassian.bamboo.specs.builders.task.VcsCheckoutTask;
+import com.atlassian.bamboo.specs.builders.trigger.AfterSuccessfulBuildPlanTrigger;
 import com.atlassian.bamboo.specs.builders.trigger.BitbucketServerTrigger;
 import com.atlassian.bamboo.specs.model.task.InjectVariablesScope;
 import com.atlassian.bamboo.specs.util.BambooServer;
@@ -100,6 +109,48 @@ public class PlanSpec {
     return planPermission;
   }
 
+  public Deployment deployment() {
+    final Deployment deployment = new Deployment(new PlanIdentifier("CHAT", "CORE")
+        .oid(new BambooOid("kxw2ardmf1mu")),
+        "core-model-server-deployment")
+        .releaseNaming(new ReleaseNaming("release-1")
+            .autoIncrement(true))
+        .environments(new Environment("Production")
+            .tasks(new CleanWorkingDirectoryTask(),
+                new ArtifactDownloaderTask()
+                    .description("Download release contents")
+                    .artifacts(new DownloadItem()
+                        .allArtifacts(true)
+                        .path("./artifacts")),
+                new ScriptTask()
+                    .description("Deploy Docker stack via docker-machine")
+                    .inlineBody(
+                        "eval $(docker-machine env gpchatbotprod)\ndocker stack deploy --with-registry-auth \\\n  -c ./artifacts/docker-compose.yaml \\\n  core"))
+            .triggers(new AfterSuccessfulBuildPlanTrigger()));
+    return deployment;
+  }
+
+  public DeploymentPermissions deploymentPermission() {
+    final DeploymentPermissions deploymentPermission = new DeploymentPermissions("core-model-server-deployment")
+        .permissions(new Permissions()
+            .userPermissions("bamboo", PermissionType.EDIT, PermissionType.VIEW)
+            .loggedInUserPermissions(PermissionType.VIEW)
+            .anonymousUserPermissionView());
+    return deploymentPermission;
+  }
+
+  public EnvironmentPermissions environmentPermission1() {
+    final EnvironmentPermissions environmentPermission1 = new EnvironmentPermissions(
+        "core-model-server-deployment")
+        .environmentName("Production")
+        .permissions(new Permissions()
+            .userPermissions("bamboo", PermissionType.EDIT, PermissionType.VIEW,
+                PermissionType.BUILD)
+            .loggedInUserPermissions(PermissionType.VIEW)
+            .anonymousUserPermissionView());
+    return environmentPermission1;
+  }
+
   public static void main(String... argv) {
     //By default credentials are read from the '.credentials' file.
     BambooServer bambooServer = new BambooServer("https://bamboo.gpchatbot.archi-lab.io");
@@ -110,5 +161,14 @@ public class PlanSpec {
 
     final PlanPermissions planPermission = planSpec.planPermission();
     bambooServer.publish(planPermission);
+
+    final Deployment deployment = planSpec.deployment();
+    bambooServer.publish(deployment);
+
+    final DeploymentPermissions deploymentPermission = planSpec.deploymentPermission();
+    bambooServer.publish(deploymentPermission);
+
+    final EnvironmentPermissions environmentPermission1 = planSpec.environmentPermission1();
+    bambooServer.publish(environmentPermission1);
   }
 }
