@@ -1,23 +1,39 @@
 # Model-Server for Core
-HTTP-Server der das Modell für den Rasa-Core bereitstellt. Das Modell wird trainiert und dann als zip auf dem port 8000 zur Verfügung gestellt.
+A http server that takes models and save them to provide them requesting instances of rasa core.
 
-## Docker
-Für die Verwendung in Docker sind folgende Befehle anzuwenden:
+## Structure
+* *bamboo-spec* build pipeline configuration for bamboo
+* *docker* all docker specific compose files
+* *start-model-server.py* start script for the server
+
+## Deploy and run the project
+To deploy and run this project docker is mandatory, you would need to install docker as well as docker stack or docker compose.
+
+### Build
+You can run the build by the following command. We will tag the image with our docker registry url and the projects name.
 ```bash
 docker build -t docker.nexus.gpchatbot.archi-lab.io/chatbot/core-model-server .
 ```
+
+### Run
+In order to run the server you will need to create a docker network which is called 'chatbot'. You can do this by running the following command:
+```bash
+docker network create chatbot
+```
+Then you can start the server with the given compose file
 ```bash
 docker-compose -p gpb -f ./docker/docker-compose.yaml up
 ```
 
-## Testanfragen
-Zum erhalten des letzten Modells kann folgendes angefragt werden
+## Example requests
+To get a model a request like this can be made:
 ```bash
 GET http://localhost:8000/models/core
 ```
-Wenn der Header "If-None-Match" mit der richtigen Version gesetzt ist kommt 204 No Content zurück, in allen anderen fällen 200 mit ddem content-type: application/zip
+If the header "If-None-Match" is set with the current version a 204 No Content will be returned.
+If the header does not match the current version a new model with content-type: application/zip will be returned.
 
-Um ein neues Modell bereitzustellen kann ein Post versendet werden, der optional eine Version enthält
+To send the server a new model a post request can be made. If wanted a semantic version can be added with the "version" header
 ```bash
 POST http://localhost:8000/models/core
 
